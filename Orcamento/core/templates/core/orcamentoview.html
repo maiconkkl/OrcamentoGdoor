@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orçamento</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center"><h1>ORÇAMENTO</h1></div>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td><b>NOME DO CLIENTE: </b>{{ orcamento.nome_do_cliente }}</td>
+                <td><b>ENDEREÇO: </b>{{ orcamento.endereco }}</td>
+                <td><b>TELEFONE: </b>{{ orcamento.telefone }}</td>
+            </tr>
+            <tr>
+                <td><b>DATA: </b>{{ orcamento.data_do_veiculo }}</td>
+                <td><b>MODELO: </b>{{ orcamento.modelo }}</td>
+                <td><b>PLACA: </b>{{ orcamento.placa }}</td>
+            </tr>
+            <tr>
+                <td><b>CPF OU CNPJ: </b>{{ orcamento.cpf_cnpj }}</td>
+                <td colspan="2"><b>INSCRICAÇÃO ESTADUAL: </b>{{ orcamento.inscricao }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>CODIGO</th>
+                <th>DESCRICAO</th>
+                <th>QUANTIDADE</th>
+                <th>PRECO UNITARIO</th>
+                <th>PRECO TOTAL</th>
+            </tr>
+        </thead>
+        <tbody class="thead-dark">
+            {% for produto in lista_estoque %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.descricao }}</td>
+                    <td>{{ produto.quantidade|floatformat:2 }}</td>
+                    <td>{{ produto.preco_unitario|floatformat:2 }}</td>
+                    <td>{{ produto.total|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <th colspan="4">TOTAL GERAL</th>
+                    <th>{{ total|floatformat:2 }}</th>
+                </tr>
+        </tbody>
+    </table>
+</body>
+</html>

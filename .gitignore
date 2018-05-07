@@ -1,0 +1,11 @@
+
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/libraries/Django_Lib.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/Orcamento.iml
+.idea/vcs.xml
+.idea/workspace.xml
+.gitattributes
+venv/*
+.gitattributes

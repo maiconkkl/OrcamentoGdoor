@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento</title>
+
+    {% load staticfiles %}
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        produtos = []
+        function somenteNumeros(num) {
+            var er = /[^0-9.]/;
+            er.lastIndex = 0;
+            var campo = num;
+            if (er.test(campo.value)) {
+              campo.value = "1";
+            }
+        }
+        function Total(campo, codigo, tipo){
+            var valor = parseFloat(campo.value);
+            if(valor <= 0){
+                campo.value = 1;
+            }
+            if(valor > produtos[codigo][1] & tipo == 'q'){
+                campo.value = produtos[codigo][1];
+            }
+            if(tipo == 'p' & valor > 0){
+                produtos[codigo][2] = campo.value;
+                console.log(campo.value);
+            }else if(tipo == 'q' & valor > 0){
+                produtos[codigo][3] = campo.value;
+            }
+
+            var td_total = document.getElementById(codigo+'_total');
+            total = produtos[codigo][3] * produtos[codigo][2];
+            td_total.innerHTML = total.toFixed(2).toString().replace('.',',');
+        }
+        function addProduct(codigo, quantidade, descricao, preco) {
+            if(produtos[codigo] != undefined){
+                return false;
+            }
+            preco = parseFloat(preco);
+            quantidade = parseFloat(quantidade);
+            produtos[codigo] = [codigo, quantidade, preco, 1];
+            var table = document.getElementById("TableOrcamentoProducts");
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+
+            cell1.innerHTML = '<input type="hidden" name="codigo[]" value='+codigo+' />' + codigo;
+            cell2.innerHTML = descricao;
+            cell3.innerHTML = '<input type="text" name="quantidade[]" value="1" min="1" max="'+quantidade+'" onkeyup="somenteNumeros(this);" id="'+codigo+'_q" onblur="Total(this, \''+codigo+'\',\'q\')" placeholder="Digite a Quantidade" />';
+            cell4.innerHTML = '<input type="text" name="preco_unitario[]" value="'+preco.toFixed(2)+'" min="1" onkeyup="somenteNumeros(this);" id="'+codigo+'_p" onblur="Total(this, \''+codigo+'\',\'p\')" placeholder="Digite o Preço de Venda" />';
+            cell5.innerHTML = preco.toFixed(2).toString().replace('.',',');
+            cell5.setAttribute("id", codigo+'_total', 0);
+        }
+        $(document).ready(function() {
+            $('#ProductsTable').DataTable({
+                "language": {
+                        "lengthMenu": "Quantidade de produtos por pagina _MENU_",
+                        "zeroRecords": "Nem um produto encontrado",
+                        "info": "Pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "Nem um produto encontrado",
+                        "infoFiltered": "(Filtrado de _MAX_ total de produtos)",
+                        "search":         "Pesquisar:",
+                        "paginate": {
+                            "first":      "Primeira",
+                            "last":       "Ultima",
+                            "next":       "Proxima",
+                            "previous":   "Voltar"
+                        },
+                },
+                "columnDefs": [ {
+                    "targets": 5,
+                    "orderable": false
+                }],
+                "columns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "searchable": false}
+                ]
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    {{ orcamento.errors }}
+    {{ orcamento.non_field_errors }}
+    {{ produtos.errors }}
+    {{ produtos.non_field_errors }}
+
+    <form method="post">
+        <div class="form-group row">
+            <div class="col-lg-4">
+                <label for="nome_do_cliente">Nome do Cliente</label>
+                <input type="text" class="form-control" id="nome_do_cliente" name="nome_do_cliente" placeholder="Digite o nome do cliente">
+            </div>
+            <div class="col-lg-4">
+                <label for="endereco">Endereço</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Digite o endereço do cliente">
+            </div>
+            <div class="col-lg-4">
+                <label for="telefone">Telefone</label>
+                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Digite o telefone do cliente">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-4">
+                <label for="data_do_veiculo">Data do Veiculo</label>
+                <input type="date" class="form-control" id="data_do_veiculo" name="data_do_veiculo" placeholder="Digite a data do veiculo">
+            </div>
+            <div class="col-lg-4">
+                <label for="modelo">Modelo</label>
+                <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Digite o modelo do veiculo">
+            </div>
+            <div class="col-lg-4">
+                <label for="placa">Placa</label>
+                <input type="text" class="form-control" id="placa" name="placa" placeholder="Digite a placa do veiculo">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6">
+                <label for="cpf_cnpj">CPF / CNPJ</label>
+                <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" placeholder="Digite o CPF ou CNPJ do cliente">
+            </div>
+            <div class="col-lg-6">
+                <label for="inscricao">Inscrição Estadual</label>
+                <input type="text" class="form-control" id="inscricao" name="inscricao" placeholder="Digite a inscricao estadual do cliente">
+            </div>
+        </div>
+        <br /><hr />
+        <div class="table-responsive">
+            <table class="table table-striped" id="TableOrcamento">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>PRODUTO</th>
+                        <th>QUANTIDADE</th>
+                        <th>PREÇO UNITARIO</th>
+                        <th>PREÇO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="TableOrcamentoProducts">
+                </tbody>
+            </table>
+            <br /><hr />
+        </div>
+        {% csrf_token %}
+        <input type="submit" value="Finalizar Orçamento">
+    </form>
+    <div class="collapse" id="Products">
+        <table id="ProductsTable" class="display responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>CODIGO</th>
+                    <th>CODIGO DE BARRAS</th>
+                    <th>QUANTIDADE</th>
+                    <th>DESCRIÇÃO</th>
+                    <th>PREÇO DE VENDA</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                <tr>
+                    <td>{{ item.codigo }}</td>
+                    <td>{{ item.barras }}</td>
+                    <td>{{ item.qtd }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.preco_venda }}</td>
+                    <td><button class="btn" id="{{ item.codigo }}" onclick="addProduct('{{ item.codigo }}', {{ item.qtd }}, '{{ item.descricao }}', {{ item.preco_venda }});">Adicionar</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button class="btn" data-toggle="collapse" data-target="#Products">Mostrar Produtos</button>
+</body>
+
+</html>
