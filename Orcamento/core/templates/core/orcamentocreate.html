@@ -106,65 +106,75 @@
     {{ produtos.errors }}
     {{ produtos.non_field_errors }}
 
-    <form method="post">
-        <div class="form-group row">
-            <div class="col-lg-4">
-                <label for="nome_do_cliente">Nome do Cliente</label>
-                <input type="text" class="form-control" id="nome_do_cliente" name="nome_do_cliente" placeholder="Digite o nome do cliente">
+
+    <div class="container-fluid clearfix">
+        <form method="post">
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label for="nome_do_cliente">Nome do Cliente</label>
+                    <input type="text" class="form-control" id="nome_do_cliente" name="nome_do_cliente" placeholder="Digite o nome do cliente">
+                </div>
+
+                <div class="col-lg-6">
+                    <label for="data_do_veiculo">Data do Veiculo</label>
+                    <input type="date" class="form-control" id="data_do_veiculo" name="data_do_veiculo" placeholder="Digite a data do veiculo">
+                </div>
             </div>
-            <div class="col-lg-4">
-                <label for="endereco">Endereço</label>
-                <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Digite o endereço do cliente">
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Digite o endereço do cliente">
+                </div>
+                <div class="col-lg-3">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Digite o telefone do cliente">
+                </div>
+                <div class="col-lg-3">
+                    <label for="modelo">Carro</label>
+                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Digite o modelo do veiculo">
+                </div>
+                <div class="col-lg-3">
+                    <label for="placa">Placa</label>
+                    <input type="text" class="form-control" id="placa" name="placa" placeholder="Digite a placa do veiculo">
+                </div>
             </div>
-            <div class="col-lg-4">
-                <label for="telefone">Telefone</label>
-                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Digite o telefone do cliente">
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label for="cpf_cnpj">CNPJ / CPF</label>
+                    <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" placeholder="Digite o CPF ou CNPJ do cliente">
+                </div>
+                <div class="col-lg-6">
+                    <label for="inscricao">IE / RG</label>
+                    <input type="text" class="form-control" id="inscricao" name="inscricao" placeholder="Digite a inscricao estadual do cliente">
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-lg-4">
-                <label for="data_do_veiculo">Data do Veiculo</label>
-                <input type="date" class="form-control" id="data_do_veiculo" name="data_do_veiculo" placeholder="Digite a data do veiculo">
-            </div>
-            <div class="col-lg-4">
-                <label for="modelo">Modelo</label>
-                <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Digite o modelo do veiculo">
-            </div>
-            <div class="col-lg-4">
-                <label for="placa">Placa</label>
-                <input type="text" class="form-control" id="placa" name="placa" placeholder="Digite a placa do veiculo">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-lg-6">
-                <label for="cpf_cnpj">CPF / CNPJ</label>
-                <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" placeholder="Digite o CPF ou CNPJ do cliente">
-            </div>
-            <div class="col-lg-6">
-                <label for="inscricao">Inscrição Estadual</label>
-                <input type="text" class="form-control" id="inscricao" name="inscricao" placeholder="Digite a inscricao estadual do cliente">
-            </div>
-        </div>
-        <br /><hr />
-        <div class="table-responsive">
-            <table class="table table-striped" id="TableOrcamento">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>CÓDIGO</th>
-                        <th>PRODUTO</th>
-                        <th>QUANTIDADE</th>
-                        <th>PREÇO UNITARIO</th>
-                        <th>PREÇO TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody id="TableOrcamentoProducts">
-                </tbody>
-            </table>
             <br /><hr />
-        </div>
-        {% csrf_token %}
-        <input type="submit" value="Finalizar Orçamento">
-    </form>
+            <div class="table-responsive">
+                <table class="table table-striped" id="TableOrcamento">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>PRODUTO</th>
+                            <th>QUANTIDADE</th>
+                            <th>PREÇO UNITARIO</th>
+                            <th>PREÇO TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TableOrcamentoProducts">
+                    </tbody>
+                </table>
+                <br /><hr />
+            </div>
+            {% csrf_token %}
+
+            <div class="col-lg-12">
+                <input type="submit" value="Finalizar Orçamento" class="btn">
+                <button class="btn" type="button" data-toggle="collapse" data-target="#Products">Mostrar Produtos</button>
+            </div>
+        </form>
+    </div>
+
+
     <div class="collapse" id="Products">
         <table id="ProductsTable" class="display responsive nowrap" style="width:100%">
             <thead>
@@ -191,7 +201,7 @@
             </tbody>
         </table>
     </div>
-    <button class="btn" data-toggle="collapse" data-target="#Products">Mostrar Produtos</button>
+
 </body>
 
 </html>

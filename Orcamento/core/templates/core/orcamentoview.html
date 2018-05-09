@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,18 +12,21 @@
     <table class="table table-striped">
         <tbody>
             <tr>
-                <td><b>NOME DO CLIENTE: </b>{{ orcamento.nome_do_cliente }}</td>
-                <td><b>ENDEREÇO: </b>{{ orcamento.endereco }}</td>
-                <td><b>TELEFONE: </b>{{ orcamento.telefone }}</td>
+                <td colspan="4"><img src="{% static "logo.png" %}" alt="Logo" width="120px" height="70px"/></td>
             </tr>
             <tr>
-                <td><b>DATA: </b>{{ orcamento.data_do_veiculo }}</td>
-                <td><b>MODELO: </b>{{ orcamento.modelo }}</td>
+                <td colspan="2"><b>NOME: </b>{{ orcamento.nome_do_cliente }}</td>
+                <td colspan="2"><b>DATA: </b>{{ orcamento.data_do_veiculo }}</td>
+            </tr>
+            <tr>
+                <td><b>TELEFONE: </b>{{ orcamento.telefone }}</td>
+                <td><b>ENDEREÇO: </b>{{ orcamento.endereco }}</td>
+                <td><b>CARRO: </b>{{ orcamento.modelo }}</td>
                 <td><b>PLACA: </b>{{ orcamento.placa }}</td>
             </tr>
             <tr>
-                <td><b>CPF OU CNPJ: </b>{{ orcamento.cpf_cnpj }}</td>
-                <td colspan="2"><b>INSCRICAÇÃO ESTADUAL: </b>{{ orcamento.inscricao }}</td>
+                <td colspan="2"><b>CNPJ / CPF: </b>{{ orcamento.cpf_cnpj }}</td>
+                <td colspan="2"><b>IE / RG: </b>{{ orcamento.inscricao }}</td>
             </tr>
         </tbody>
     </table>

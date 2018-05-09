@@ -3,6 +3,7 @@ from .models import ESTOQUE
 from .models import Produto
 from .models import Orcamento
 from .forms import ProdutoForm, OrcamentoForm
+from django.conf.urls.static import static
 
 def orcamentocreate(request):
     itens = ESTOQUE.objects.using('firebird').all()
