@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orçamento</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center"><h1>ORÇAMENTO</h1></div>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td colspan="4"><img src="{% static "logo.png" %}" alt="Logo" width="120px" height="70px"/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>NOME: </b>{{ orcamento.nome_do_cliente }}</td>
+                <td colspan="2"><b>DATA: </b>{{ orcamento.data_criacao }}</td>
+            </tr>
+            <tr>
+                <td><b>TELEFONE: </b>{{ orcamento.telefone }}</td>
+                <td><b>ENDEREÇO: </b>{{ orcamento.endereco }}</td>
+                <td><b>VEICULO: </b>{{ orcamento.modelo }}</td>
+                <td><b>PLACA: </b>{{ orcamento.placa }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>CNPJ / CPF: </b>{{ orcamento.cpf_cnpj }}</td>
+                <td colspan="2"><b>IE / RG: </b>{{ orcamento.inscricao }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>CODIGO</th>
+                <th>DESCRICAO</th>
+                <th>QUANTIDADE</th>
+                <th>DESCONTO</th>
+                <th>PRECO UNITARIO</th>
+                <th>PRECO TOTAL</th>
+            </tr>
+        </thead>
+        <tbody class="thead-dark">
+            {% for produto in lista_estoque %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.descricao }}</td>
+                    <td>{{ produto.quantidade|floatformat:2 }}</td>
+                    <td>{{ produto.desconto|floatformat:2 }}</td>
+                    <td>{{ produto.preco_unitario|floatformat:2 }}</td>
+                    <td>{{ produto.total|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td colspan="3">GARANTIA <br>{{ orcamento.garantia }}</td>
+                    <td colspan="3">CONDIÇÕES DE PAGAMENTO <br>{{ orcamento.pagamento }}</td>
+                </tr>
+                <tr>
+                    <th colspan="5"></th>
+                    <th>
+                        TOTAL PRODUTOS: {{ total_produto|floatformat:2 }}<br />
+                        TOTAL DESCONTO: {{ total_desconto|floatformat:2 }}<br />
+                        TOTAL GERAL: {{ total|floatformat:2 }}
+                    </th>
+                </tr>
+        </tbody>
+    </table>
+</body>
+</html>

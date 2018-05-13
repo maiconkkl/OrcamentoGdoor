@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orçamento</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+       $(document).ready(function() {
+            $('#ProductsTable').DataTable({
+                "language": {
+                        "lengthMenu": "Quantidade de produtos por pagina _MENU_",
+                        "zeroRecords": "Nem um produto encontrado",
+                        "info": "Pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "Nem um produto encontrado",
+                        "infoFiltered": "(Filtrado de _MAX_ total de produtos)",
+                        "search":         "Pesquisar:",
+                        "paginate": {
+                            "first":      "Primeira",
+                            "last":       "Ultima",
+                            "next":       "Proxima",
+                            "previous":   "Voltar"
+                        },
+                },
+                "columnDefs": [ {
+                    "targets": 4,
+                    "orderable": false
+                }],
+                "columns": [
+                    null,
+                    null,
+                    null,
+                    { "searchable": false}
+                ]
+            });
+       });
+    </script>
+</head>
+<body>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center"><h1>ORÇAMENTO</h1></div>
+    <a href="{% url 'create' %}"><button class="btn">NOVO ORÇAMENTO</button></a>
+    <table id="ProductsTable" class="display responsive nowrap table table-striped" style="width:100%">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>NOME DO CLIENTE</th>
+                <th>DATA DE CRIAÇÃO</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for orcamento in orcamentos %}
+                <tr>
+                    <td>{{ orcamento.id }}</td>
+                    <td>{{ orcamento.nome_do_cliente }}</td>
+                    <td>{{ orcamento.data_criacao }}</td>
+                    <td><a href="{% url 'orcamento' orcamento.id %}">IMPRIMIR</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

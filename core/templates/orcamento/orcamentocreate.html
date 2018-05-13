@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento</title>
+
+    {% load staticfiles %}
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        produtos = []
+        function somenteNumeros(num) {
+            var er = /[^0-9.]/;
+            er.lastIndex = 0;
+            var campo = num;
+            if (er.test(campo.value)) {
+              campo.value = "1";
+            }
+        }
+        function remover(tr, codigo){
+            tr.parentNode.parentNode.remove();
+            delete produtos[codigo]
+        }
+        function Total(campo, codigo, tipo){
+            var valor = parseFloat(campo.value);
+            if(valor <= 0){
+                campo.value = 1;
+            }
+            if(valor > produtos[codigo][1] & tipo == 'q'){
+                campo.value = produtos[codigo][1];
+            }
+            if(tipo == 'p' & valor > 0){
+                produtos[codigo][2] = campo.value;
+                console.log(campo.value);
+            }else if(tipo == 'q' & valor > 0){
+                produtos[codigo][3] = campo.value;
+            }
+
+            var td_total = document.getElementById(codigo+'_total');
+            total = produtos[codigo][3] * produtos[codigo][2];
+            td_total.innerHTML = total.toFixed(2).toString().replace('.',',');
+        }
+        function addProduct(codigo, quantidade, descricao, preco) {
+            if(produtos[codigo] != undefined){
+                return false;
+            }
+            preco = parseFloat(preco);
+            quantidade = parseFloat(quantidade);
+            produtos[codigo] = [codigo, quantidade, preco, 1];
+            var table = document.getElementById("TableOrcamentoProducts");
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+            cell1.innerHTML = '<input type="hidden" name="codigo[]" value='+codigo+' />' + codigo;
+            cell2.innerHTML = descricao;
+            cell3.innerHTML = '<input type="text" name="quantidade[]" value="1" onkeyup="somenteNumeros(this);" id="'+codigo+'_q" onblur="Total(this, \''+codigo+'\',\'q\')" placeholder="Digite a Quantidade" />';
+            cell4.innerHTML = '<input type="text" name="desconto[]" value="0" onkeyup="somenteNumeros(this);" id="'+codigo+'_q" placeholder="Digite o Desconto" />';
+            cell5.innerHTML = '<input type="text" name="preco_unitario[]" value="'+preco.toFixed(2)+'" min="1" onkeyup="somenteNumeros(this);" id="'+codigo+'_p" onblur="Total(this, \''+codigo+'\',\'p\')" placeholder="Digite o Preço de Venda" />';
+            cell6.innerHTML = preco.toFixed(2).toString().replace('.',',');
+            cell6.setAttribute("id", codigo+'_total', 0);
+            cell7.innerHTML = '<button type="button" onclick="remover(this, \''+codigo+'\')">Remover</button>'
+        }
+        $(document).ready(function() {
+            $('#ProductsTable').DataTable({
+                "language": {
+                        "lengthMenu": "Quantidade de produtos por pagina _MENU_",
+                        "zeroRecords": "Nem um produto encontrado",
+                        "info": "Pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "Nem um produto encontrado",
+                        "infoFiltered": "(Filtrado de _MAX_ total de produtos)",
+                        "search":         "Pesquisar:",
+                        "paginate": {
+                            "first":      "Primeira",
+                            "last":       "Ultima",
+                            "next":       "Proxima",
+                            "previous":   "Voltar"
+                        },
+                },
+                "columnDefs": [ {
+                    "targets": 5,
+                    "orderable": false
+                }],
+                "columns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "searchable": false}
+                ]
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+    {{ orcamento.errors }}
+    {{ orcamento.non_field_errors }}
+    {{ produtos.errors }}
+    {{ produtos.non_field_errors }}
+
+
+    <div class="container-fluid clearfix">
+        <form method="post">
+            <div class="form-group row">
+                <div class="col-lg-4 border" align="left">
+                    <button class="btn btn-primary" type="submit">Finalizar Orçamentos</button>
+                </div>
+                <div class="col-lg-4 border" align="center">
+                    <h3>NOVO ORÇAMENTO</h3>
+                </div>
+                <div class="col-lg-4 border" align="right">
+                    <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#Products">Mostrar Produtos</button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <label for="nome_do_cliente">Cliente</label>
+                    <input type="text" class="form-control" name="nome_do_cliente" placeholder="Digite o nome do cliente">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" class="form-control" name="endereco" placeholder="Digite o endereço do cliente">
+                </div>
+                <div class="col-lg-3">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control" name="telefone" placeholder="Digite o telefone do cliente">
+                </div>
+                <div class="col-lg-3">
+                    <label for="veiculo">Veiculo</label>
+                    <input type="text" class="form-control" name="veiculo" placeholder="Digite o modelo do veiculo">
+                </div>
+                <div class="col-lg-3">
+                    <label for="placa">Placa</label>
+                    <input type="text" class="form-control" name="placa" placeholder="Digite a placa do veiculo">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label for="cpf_cnpj">CNPJ / CPF</label>
+                    <input type="text" class="form-control" name="cpf_cnpj" placeholder="Digite o CPF ou CNPJ do cliente">
+                </div>
+                <div class="col-lg-6">
+                    <label for="inscricao">IE / RG</label>
+                    <input type="text" class="form-control" name="inscricao" placeholder="Digite a inscricao estadual do cliente">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label for="garantia">Garantia</label>
+                    <textarea class="form-control" name="garantia" rows="2"></textarea>
+                </div>
+                <div class="col-lg-6">
+                    <label for="pagamento">Condições de Pagamento</label>
+                    <textarea class="form-control" name="pagamento" rows="2"></textarea>
+                </div>
+            </div>
+            <br /><hr />
+            <div class="table-responsive">
+                <table class="table table-striped" id="TableOrcamento">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>PRODUTO</th>
+                            <th>QUANTIDADE</th>
+                            <th>DESCONTO</th>
+                            <th>PREÇO UNITARIO</th>
+                            <th>PREÇO TOTAL</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TableOrcamentoProducts">
+                    </tbody>
+                </table>
+                <br /><hr />
+            </div>
+            {% csrf_token %}
+
+            <div class="form-group row">
+                <div class="col-lg-6 border" align="left">
+                    <button class="btn btn-primary" type="submit">Finalizar Orçamentos</button>
+                </div>
+                <div class="col-lg-6 border" align="right">
+                    <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#Products">Mostrar Produtos</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="collapse" id="Products">
+        <table id="ProductsTable" class="display responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>CODIGO</th>
+                    <th>CODIGO DE BARRAS</th>
+                    <th>QUANTIDADE</th>
+                    <th>DESCRIÇÃO</th>
+                    <th>TAMANHO</th>
+                    <th>PREÇO DE VENDA</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                <tr>
+                    <td>{{ item.codigo }}</td>
+                    <td>{{ item.barras }}</td>
+                    <td>{{ item.qtd }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.tamanho }}</td>
+                    <td>{{ item.preco_venda }}</td>
+                    <td><button class="btn" id="{{ item.codigo }}" onclick="addProduct('{{ item.codigo }}', {{ item.qtd }}, '{{ item.descricao }}', {{ item.preco_venda }});">Adicionar</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
